@@ -1,0 +1,55 @@
+<%- include("_header") -%>
+
+<h1>Select a file with products for Database Insert</h1>
+
+<h4>Total number of records in the database: <strong><%= totRecs %></strong></h4>
+
+<form>
+    <input type="file" name="filename" required><p></p>
+    <input type="submit">
+</form>
+<p id="result"></p>
+
+<script>
+    // Typically, if the script is large, we place it in a separate file
+    //   For demonstrations, it is included in the same file.
+    // Handle form submission
+    document.querySelector("form").addEventListener("submit", e => {
+      // Cancel default behavior of sending a synchronous POST request
+      e.preventDefault();
+      // Create a FormData object, passing the form as a parameter
+      const formData = new FormData(e.target);
+      // Send form data to the server with an asynchronous POST request
+      const resultElement = document.getElementById("result");
+      resultElement.innerText = "Records Processing, please wait...";
+      fetch("/import", {
+        method: "POST",
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.totRecs);
+            resultElement.innerText = "";
+            resultElement.innerHTML = `
+                <p>
+                    Intial number of books in DB: ${data.totRecs} <br>
+                    Records successfully inserted: ${data.numberInserted} <br>
+                    Result number of books in DB: <strong>${parseInt(data.numberInserted) + parseInt(data.totRecs)}</strong> <br>
+                </p>`;
+                if(data.numberFailed > 0) {
+                    resultElement.innerHTML += `
+                    <p>    
+                        Error Details: <br>
+                        Total book records processed: ${data.numberFailed + data.numberInserted} <br>
+                        Number of books not inserted: <strong>${data.numberFailed}</strong> <br>
+                        Detailed Errors: <br>
+                        ${data.msg} <br>
+                    </p>`};
+        })
+        .catch(err => {
+            resultElement.innerText = `Error: ${err.message}`;
+        });
+    });
+    </script>
+
+<%- include("_footer") -%>

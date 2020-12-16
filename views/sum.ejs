@@ -1,0 +1,45 @@
+<%- include("_header") -%>
+
+<h2> Calculate Sum of Series</h2>
+
+<!-- Not using bootstrap, just a simple form that you may enhance -->
+<form action="/sum" method="POST">
+    <table>
+        <tr>
+            <td><label for="firstnumber">Enter starting number</label>:</td>
+            <td><input type="number" required name="firstnumber" id="firstnumber" /></td>
+            <td>(required)</td>
+        </tr>
+        <tr>
+            <td><label for="secondnumber">Enter ending number</label>:</td>
+            <td><input type="number" required name="secondnumber" id="secondnumber" /></td>
+            <td>(required)</td>
+        </tr>
+        <tr>
+            <td><label for="increment">Enter increment</label>:</td>
+            <td><input type="number" required name="increment" id="increment" /></td>
+            <td>(required)</td>
+        </tr>
+    </table>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2"></label>
+        <div class="col-sm-10">
+          <input type="submit" value="Save" class="btn btn-default btn-success" />
+          <a class="btn btn-outline-dark cancel" href="/search">Cancel</a>
+        </div>
+      </div>
+</form>
+
+<% if (type === "POST") { %>
+    <% if (trans === "success") { %>
+      <h2>Success</h2>
+      <p><%= msg %><strong><%= answer %></strong></p>
+    <% } else { %>
+      <h2 style="color:red">Error:</h2>
+      <p style="color:red"><%= msg %></p>
+    <% } %>
+  <% } %>
+  
+
+
+<%- include("_footer") -%>   
